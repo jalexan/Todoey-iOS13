@@ -8,14 +8,16 @@
 
 import UIKit
 
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        print(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).last! as String)
+        displaySavedData()
         return true
     }
 
@@ -27,6 +29,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidEnterBackground(_ application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+        let plistPath = getPath()
+
+         if !FileManager.default.fileExists(atPath: plistPath) {
+
+             FileManager.default.createFile(atPath: plistPath, contents: nil, attributes: nil)
+
+         }
+
+         let data:NSMutableDictionary = [:]
+         data.setValue("test_Value", forKey: "test_key")
+         data.write(toFile: plistPath, atomically: true)
+        print(data)
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
@@ -39,8 +53,32 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+        print(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).last! as String)
+        //print(userDefaults.value(forKey: "UserTodoList") as? [String])
+        
+
+     }
+
+
+     
+
+    
+    func getPath() -> String {
+        let plistFileName = "data.plist"
+        let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
+        let documentPath = paths[0] as NSString
+        let plistPath = documentPath.appendingPathComponent(plistFileName)
+        return plistPath
     }
 
-
+    func displaySavedData() {
+        let plistPath = self.getPath()
+        if FileManager.default.fileExists(atPath: plistPath) {
+            if let savedData = NSMutableDictionary(contentsOfFile: plistPath) {
+                print(savedData)
+            }
+        }
+        
+    }
 }
 
