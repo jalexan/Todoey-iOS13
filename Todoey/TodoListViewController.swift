@@ -11,16 +11,24 @@ import UIKit
 class TodoListViewController: UITableViewController {
     let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
 
-    //var todoList = ["Buy Milk", "Call Robbie", "Water the Plants"]
+    //var todoList = ["Buy Milk", "Call mom", "Water the Plants"]
     var todoList = [TodoItemModel]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        self.navigationController?.navigationBar.backgroundColor = .blue
-        let textAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
-        self.navigationController?.navigationBar.titleTextAttributes = textAttributes
+        let appearance = UINavigationBarAppearance()
+        //appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = .orange
+        appearance.titleTextAttributes = [ .foregroundColor: UIColor.white]
+ 
+        self.navigationController?.navigationBar.standardAppearance = appearance
+        self.navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        
+//        let textAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+//        self.navigationController?.navigationBar.titleTextAttributes = textAttributes
         self.navigationItem.title = "Todo List"
+ 
         
         print(dataFilePath!)
         readFromPlist()
